@@ -3,6 +3,7 @@
 namespace Zeeshan\LaravelShipStation;
 
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Zeeshan\LaravelShipStation\ShipStation;
 
@@ -12,6 +13,7 @@ class ShipStationOrders
     private $uri = '/orders';
     private array $params = [];
     private $order = null;
+
     public function __construct()
     {
         $this->params = [
@@ -27,12 +29,18 @@ class ShipStationOrders
         try{
             $shipStation = new ShipStation();
             $response = $shipStation->get($this->uri, ['query' => array_merge($this->params, $options)]);
-            return $this->toJson($response->getBody()->getContents());
+            return $this->toJson($response);
         } catch (ClientException $errorResponse){
+            if($errorResponse->getCode() == 400){
+                throw new NotFoundResourceException('Order not found');
+            }
+
+            if($errorResponse->getCode() == 401){
+                throw new UnauthorizedException('Unauthorized.');
+            }
+
             return $errorResponse;
         }
-
-
     }
 
     public function status($status)
@@ -63,13 +71,7 @@ class ShipStationOrders
     {
         $this->uri .= "/$orderId";
 
-        $response = $this->get();
-
-        if($response->getCode() == 400){
-            throw new NotFoundResourceException('Order not found');
-        }
-
-        return $response;
+        return $this->get();
     }
 
     public function update(int $orderId, array $options = [])
