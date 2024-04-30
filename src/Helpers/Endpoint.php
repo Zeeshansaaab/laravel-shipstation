@@ -1,7 +1,7 @@
 <?php
-namespace Hkonnet\LaravelShipStation\Helpers;
+namespace Zeeshan\LaravelShipStation\Helpers;
 
-use Hkonnet\LaravelShipStation\ShipStation;
+use Zeeshan\LaravelShipStation\ShipStation;
 
 abstract class Endpoint
 {

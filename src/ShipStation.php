@@ -1,5 +1,5 @@
 <?php
-namespace Hkonnet\LaravelShipStation;
+namespace Zeeshan\LaravelShipStation;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
@@ -143,7 +143,7 @@ class ShipStation extends Client
             $this->endpoint = '/' . $property . '/';
         }
 
-        $className = "Hkonnet\\LaravelShipStation\\Helpers\\" . ucfirst($property);
+        $className = "Zeeshan\\LaravelShipStation\\Helpers\\" . ucfirst($property);
 
         if (class_exists($className)) {
             return new $className($this);

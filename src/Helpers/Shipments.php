@@ -1,5 +1,5 @@
 <?php
-namespace Hkonnet\LaravelShipStation\Helpers;
+namespace Zeeshan\LaravelShipStation\Helpers;
 
 class Shipments extends Endpoint
 {

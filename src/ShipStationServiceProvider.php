@@ -1,6 +1,6 @@
 <?php
 
-namespace Hkonnet\LaravelShipStation;
+namespace Zeeshan\LaravelShipStation;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -33,7 +33,7 @@ class ShipStationServiceProvider extends ServiceProvider
         });
 
         $this->app->bind('shipstation', function ($app) {
-            return new \Hkonnet\LaravelShipStation\ShipStation();
+            return new \Zeeshan\LaravelShipStation\ShipStation();
         });
     }
 }

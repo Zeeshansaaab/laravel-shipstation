@@ -1,5 +1,5 @@
 <?php
-namespace Hkonnet\LaravelShipStation\Models;
+namespace Zeeshan\LaravelShipStation\Models;
 
 class InternationalOptions
 {
