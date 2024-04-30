@@ -18,7 +18,7 @@ class ShipStationOrders
         ];
     }
 
-    public function get(array $options = []): \Psr\Http\Message\ResponseInterface
+    public function get(array $options = [])
     {
         $shipStation = new ShipStation();
         $response =  $shipStation->get($this->uri, ['query' => array_merge($this->params, $options)]);
