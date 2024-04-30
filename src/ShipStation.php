@@ -1,7 +1,6 @@
 <?php
 namespace Zeeshan\LaravelShipStation;
 
-use App\Libraries\ShipstationOrders;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 
@@ -153,7 +152,7 @@ class ShipStation extends Client
         return $this;
     }
 
-    public function orders(): ShipstationOrders
+    public function orders(): \Zeeshan\LaravelShipStation\ShipstationOrders
     {
         return new ShipstationOrders();
     }

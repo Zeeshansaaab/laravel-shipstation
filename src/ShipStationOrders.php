@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Libraries;
+namespace Zeeshan\LaravelShipStation;
 
 use Zeeshan\LaravelShipStation\ShipStation;
 
-class ShipstationOrders
+class ShipStationOrders
 {
     private $uri = '/orders';
     private array $params = [];
     public function __construct()
     {
-        $this->pageSize = config('shipstation.page_size');
         $this->params = [
             'storeId' => config('shipstation.ebayStoreId'),
             'pageSize' => config('shipstation.page_size'),
