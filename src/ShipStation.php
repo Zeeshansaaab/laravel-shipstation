@@ -152,8 +152,8 @@ class ShipStation extends Client
         return $this;
     }
 
-    public function orders(): \Zeeshan\LaravelShipStation\ShipstationOrders
+    public function orders(): ShipStationOrders
     {
-        return new ShipstationOrders();
+        return new ShipStationOrders();
     }
 }
