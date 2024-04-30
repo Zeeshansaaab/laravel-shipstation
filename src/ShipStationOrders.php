@@ -20,8 +20,9 @@ class ShipStationOrders
 
     public function get(array $options = []): \Psr\Http\Message\ResponseInterface
     {
-        $shipstation = new ShipStation();
-        return $shipstation->get($this->uri, array_merge($this->params, $options));
+        $shipStation = new ShipStation();
+        $response =  $shipStation->get($this->uri, ['query' => array_merge($this->params, $options)]);
+        return json_decode($response->getBody()->getContents());
     }
 
     public function status($status)
