@@ -9,15 +9,14 @@ A simple PHP API wrapper for [ShipStation](http://shipstation.com) built for Lar
 
 Installation
 ------------
-This package can be installed via [Composer](http://getcomposer.org) by requiring the ```campo/laravel-shipstation``` package in your project's ```composer.json```
 
 ```json
-composer require rajarizwan2007/laravel-shipstation:dev-master
+composer require zeeshanali/laravel-shipstation
 ```
 
 Second, add the LaravelShipStation service provider to your providers array located in ```config/app.php```
 ```php
-Hkonnet\LaravelShipStation\ShipStationServiceProvider::class,
+Zeeshan\LaravelShipStation\ShipStationServiceProvider::class,
 ```
 
 After installing via composer you will need to publish the configuration:
