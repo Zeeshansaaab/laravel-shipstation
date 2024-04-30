@@ -18,7 +18,7 @@ class ShipStationOrders
     {
         $this->params = [
             'storeId' => config('shipstation.ebayStoreId'),
-            'pageSize' => config('shipstation.page_size'),
+            'pageSize' => config('shipstation.pageSize'),
             'page' => 1,
             'orderStatus' => null,
         ];
