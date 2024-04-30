@@ -1,16 +1,16 @@
 {
-    "name": "rajarizwan2007/laravel-shipstation",
+    "name": "zeeshanali/laravel-shipstation",
     "description": "ShipStation API package Laravel 10.",
     "license": "MIT",
     "authors": [
         {
-            "name": "Raja Rizwan",
-            "email": "rajarizwan2007@gmail.com"
+            "name": "Zeeshan Ali",
+            "email": "zeeshansaaab@gmail.com"
         }
     ],
     "autoload" : {
         "psr-4": {
-            "Hkonnet\\LaravelShipStation\\": "src/"
+            "Zeeshan\\LaravelShipStation\\": "src/"
         }
     },
     "require": {
