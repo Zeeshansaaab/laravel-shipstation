@@ -31,7 +31,7 @@ class ShipStationOrders
             $response = $shipStation->get($this->uri, ['query' => array_merge($this->params, $options)]);
             return $this->toJson($response);
         } catch (ClientException $errorResponse){
-            if($errorResponse->getCode() == 400){
+            if($errorResponse->getCode() == 400 || $errorResponse->getCode() == 404){
                 throw new NotFoundResourceException('Order not found');
             }
 
@@ -79,7 +79,7 @@ class ShipStationOrders
         $order = $this->find($orderId);
 
         if(!(isset($order->orderKey) && $order->orderKey)){
-            throw new NotFoundResourceException('Order not found');
+            throw new NotFoundResourceException('Order does not have and orderKey which is require to update the order.');
         }
 
         $shipStation = new ShipStation();
