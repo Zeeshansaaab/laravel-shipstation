@@ -5,18 +5,21 @@ namespace Zeeshan\LaravelShipStation;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
+use Zeeshan\LaravelShipStation\Helpers\Orders;
+use Zeeshan\LaravelShipStation\Models\Order;
 use Zeeshan\LaravelShipStation\ShipStation;
 
-class ShipStationOrders
+class ShipStationOrders extends Orders
 {
     const ENDPOINT = '/orders';
     const UPDATE = self::ENDPOINT . '/createorder';
-    private $uri = '/orders';
+    private $api;
     private array $params = [];
     private $order = null;
 
     public function __construct()
     {
+        $this->api = new ShipStation();
         $this->params = [
             'storeId' => config('shipstation.ebayStoreId'),
             'pageSize' => config('shipstation.pageSize'),
@@ -25,12 +28,11 @@ class ShipStationOrders
         ];
     }
 
-    public function get(array $options = [])
+    public function all(array $options = [], $endpoint = self::ENDPOINT)
     {
         try{
-            $shipStation = new ShipStation();
-            $response = $shipStation->get($this->uri, ['query' => array_merge($this->params, $options)]);
-            return $this->toJson($response);
+            $response = $this->api->get(self::ENDPOINT, ['query' => array_merge($this->params, $options)]);
+            return $this->toCollection($response);
         } catch (ClientException $errorResponse){
             if($errorResponse->getCode() == 400 || $errorResponse->getCode() == 404){
                 throw new NotFoundResourceException('Order not found');
@@ -84,12 +86,13 @@ class ShipStationOrders
 
     public function find(int $orderId)
     {
-        $this->uri .= "/$orderId";
-
-        return $this->get();
+        $endpoint = self::ENDPOINT . "/$orderId";
+        $response = $this->api->get($endpoint);
+        $response = $this->toJson($response);
+        return $this->toObj($response);
     }
 
-    public function update(int $orderId, array $options = [])
+    public function modify(int $orderId, array $options = [])
     {
         $order = $this->find($orderId);
 
@@ -107,10 +110,34 @@ class ShipStationOrders
 
         $options = array_merge($order, $options);
         $options['json'] = true;
-        return $this->toJson($shipStation->post(self::UPDATE, $options));
+        return $this->toCollection($shipStation->post(self::UPDATE, $options));
     }
 
-    public function toJson($response)
+    public function toCollection($response)
+    {
+        $response = $this->toJson($response);
+        $collection =  collect($response->orders)->map(function ($order) {
+            return $this->toObj($order);
+        });
+
+        $collection->total = $response->total;
+        $collection->page = $response->page;
+        $collection->pages = $response->pages;
+        return $collection;
+    }
+
+    private function toObj($orderResponse)
+    {
+        $arr = json_decode(json_encode($orderResponse), true);
+        $order = new Order();
+        foreach ($arr as $key => $val){
+            $order->{$key} = $val;
+        }
+
+        return $order;
+    }
+
+    private function toJson($response)
     {
         return json_decode($response->getBody()->getContents());
     }
