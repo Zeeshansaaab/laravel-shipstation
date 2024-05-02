@@ -92,6 +92,12 @@ class ShipStationOrders extends Orders
         return $this->toObj($response);
     }
 
+    public function where(string $column, string $value)
+    {
+        $this->params[$column] = $value;
+        return $this;
+    }
+
     public function modify(int $orderId, array $options = [])
     {
         $order = $this->find($orderId);
@@ -107,10 +113,10 @@ class ShipStationOrders extends Orders
         }
 
         $order = json_decode(json_encode((object) $order), true);
-
         $options = array_merge($order, $options);
         $options['json'] = true;
-        return $this->toCollection($shipStation->post(self::UPDATE, $options));
+
+        return $this->toObj($shipStation->post(self::UPDATE, $options));
     }
 
     public function toCollection($response)
@@ -119,7 +125,6 @@ class ShipStationOrders extends Orders
         $collection =  collect($response->orders)->map(function ($order) {
             return $this->toObj($order);
         });
-
         $collection->total = $response->total;
         $collection->page = $response->page;
         $collection->pages = $response->pages;
