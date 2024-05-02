@@ -115,8 +115,8 @@ class ShipStationOrders extends Orders
         $order = json_decode(json_encode((object) $order), true);
         $options = array_merge($order, $options);
         $options['json'] = true;
-
-        return $this->toObj($shipStation->post(self::UPDATE, $options));
+        $response = $this->toJson($shipStation->post(self::UPDATE, $options));
+        return $this->toObj($response);
     }
 
     public function toCollection($response)
