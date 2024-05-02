@@ -10,6 +10,7 @@ use Zeeshan\LaravelShipStation\ShipStation;
 class ShipStationOrders
 {
     const ENDPOINT = '/orders';
+    const UPDATE = self::ENDPOINT . '/createorder';
     private $uri = '/orders';
     private array $params = [];
     private $order = null;
@@ -67,6 +68,20 @@ class ShipStationOrders
         return $this;
     }
 
+    public function limit(int $limit)
+    {
+        $this->params['pageSize'] = $limit;
+        return $this;
+    }
+
+    public function sortBy($column, $direction = 'asc')
+    {
+        $this->params['sortBy'] = $column;
+        $this->params['sortDir'] = $direction;
+
+        return $this;
+    }
+
     public function find(int $orderId)
     {
         $this->uri .= "/$orderId";
@@ -79,15 +94,20 @@ class ShipStationOrders
         $order = $this->find($orderId);
 
         if(!(isset($order->orderKey) && $order->orderKey)){
-            throw new NotFoundResourceException('Order does not have and orderKey which is require to update the order.');
+            throw new NotFoundResourceException('Order does not have an orderKey which is require to update the order.');
         }
 
         $shipStation = new ShipStation();
 
-        $options = array_merge(['storeId' => $this->params['storeId'], 'orderKey' => $order->orderKey], $options);
+        if($this->params['storeId']){
+            $options['storeId'] = $this->params['storeId'];
+        }
 
-        $this->toJson($shipStation->post($this->uri, ['query' => $options]));
+        $order = json_decode(json_encode((object) $order), true);
 
+        $options = array_merge($order, $options);
+        $options['json'] = true;
+        return $this->toJson($shipStation->post(self::UPDATE, $options));
     }
 
     public function toJson($response)
