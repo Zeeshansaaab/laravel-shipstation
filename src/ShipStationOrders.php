@@ -101,9 +101,15 @@ class ShipStationOrders extends Orders
     public function modify(int $orderId, array $options = [])
     {
         $order = $this->find($orderId);
-
         if(!(isset($order->orderKey) && $order->orderKey)){
             throw new NotFoundResourceException('Order does not have an orderKey which is require to update the order.');
+        }
+
+        $storeId = $this->params['storeId'];
+        $orderStoreId = isset($order->advancedOptions['storeId']) ? $order->advancedOptions['storeId'] : null;
+        
+        if($storeId != $orderStoreId){
+            throw new NotFoundResourceException(sprintf('Order not found in this store.'));
         }
 
         $shipStation = new ShipStation();
