@@ -13,6 +13,7 @@ class ShipStationOrders extends Orders
 {
     const ENDPOINT = '/orders';
     const UPDATE = self::ENDPOINT . '/createorder';
+    const MARKASSHIPPED = self::ENDPOINT . '/markasshipped';
     private $api;
     private array $params = [];
     private $order = null;
@@ -120,6 +121,15 @@ class ShipStationOrders extends Orders
         $options = array_merge($order, $options);
         $options['json'] = true;
         $response = $this->toJson($shipStation->post(self::UPDATE, $options));
+        return $this->toObj($response);
+    }
+
+    public function markAsShipped(int $orderId, array $options = [])
+    {
+        $shipStation = new ShipStation();
+        $options['json'] = true;
+        $options['orderId'] = $orderId;
+        $response = $this->toJson($shipStation->post(self::MARKASSHIPPED, $options));
         return $this->toObj($response);
     }
 
