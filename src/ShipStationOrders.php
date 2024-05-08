@@ -89,7 +89,16 @@ class ShipStationOrders extends Orders
         $endpoint = self::ENDPOINT . "/$orderId";
         $response = $this->api->get($endpoint);
         $response = $this->toJson($response);
-        return $this->toObj($response);
+        $order = $this->toObj($response);
+
+        $storeId = $this->params['storeId'];
+        $orderStoreId = $order->advancedOptions['storeId'] ?? null;
+
+        if($storeId != $orderStoreId){
+            throw new NotFoundResourceException(sprintf('Order not found in this store.'));
+        }
+
+        return $order;
     }
 
     public function where(string $column, string $value)
@@ -105,18 +114,7 @@ class ShipStationOrders extends Orders
             throw new NotFoundResourceException('Order does not have an orderKey which is require to update the order.');
         }
 
-        $storeId = $this->params['storeId'];
-        $orderStoreId = isset($order->advancedOptions['storeId']) ? $order->advancedOptions['storeId'] : null;
-        
-        if($storeId != $orderStoreId){
-            throw new NotFoundResourceException(sprintf('Order not found in this store.'));
-        }
-
         $shipStation = new ShipStation();
-
-        if($this->params['storeId']){
-            $options['storeId'] = $this->params['storeId'];
-        }
 
         $order = json_decode(json_encode((object) $order), true);
         $options = array_merge($order, $options);
